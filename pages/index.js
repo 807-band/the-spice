@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { getStations } from '../lib/stations'
 
 export default function Home({ allStationsData }) {
@@ -9,22 +10,15 @@ export default function Home({ allStationsData }) {
             <link rel="icon" href="/favicon.ico" />
          </Head>
          <main>
-            <h1>
-               Hello World
-            </h1>
-            <br />
-            <br />
             <body>   
                <b>STATIONS: </b>
                <br />
                <br />
                { allStationsData.map(({id, title}) => (
-                  <li>
-                     {id}
-                     <br />
-                     {title}
-                     <br />
-                     <br />
+                  <li key={id}>
+                     <Link href="/stations/[id]" as={`/stations/${id}`}>
+                        <a>{title}</a>
+                     </Link>
                   </li>
                ))}
                <br />
