@@ -21,9 +21,6 @@ export default function Home({ allStationsData }) {
                      </Link>
                   </li>
                ))}
-               <br />
-               <br />
-               raw json at /api/cors
             </body>
          </main>
       </>
