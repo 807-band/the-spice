@@ -18,16 +18,7 @@ export default function Station({ stationData }) {
    )
 }
 
-export async function getStaticPaths() {
-   const paths = await getAllStationIds()
-   return {
-      paths,
-      fallback: false
-   }
-}
-
-
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params }) {
   const stationData = await getStationData(params.id)
   return {
     props: {
