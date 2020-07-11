@@ -27,7 +27,7 @@ export default function Home({ allStationsData }) {
    )
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const allStationsData = await getStations()
   return {
     props: {
