@@ -1,8 +1,8 @@
-export default function Home() {
+export default function Profile() {
    return (
       <>  
          <h1>
-            home sweet home 🏠
+            to-be profile page
          </h1>
       </>
    )

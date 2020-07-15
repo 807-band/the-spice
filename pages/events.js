@@ -1,8 +1,8 @@
-export default function Home() {
+export default function Events() {
    return (
       <>  
          <h1>
-            home sweet home 🏠
+            to-be events page
          </h1>
       </>
    )

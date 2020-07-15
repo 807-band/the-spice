@@ -27,6 +27,11 @@
    padding-left: 30px;
 }
 
+.card-header {
+   background-color: #154734;
+   color: white;
+}
+
 // mobile view
 @include media-breakpoint-down(xs) {
    .side-nav {
