@@ -2,6 +2,6 @@ require('dotenv').config();
 
 module.exports = {
   env: {
-    SERVERDOM: process.env.SERVERDOM,
+    SERVERDOM: process.env.SERVERDOM || localhost
   },
 }
