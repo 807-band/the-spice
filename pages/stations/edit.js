@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { getStations, updateOrder } from '../../lib/stations'
+import { getStationsSorted, updateOrder } from '../../lib/stations'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
 import { DragDropContext, resetServerContext } from 'react-beautiful-dnd'
@@ -14,24 +14,10 @@ export default class extends React.Component {
    constructor(props) {
       super(props)
 
-      // separate station data into beginnerStations and advancedStations
-      const beginnerStations = [], advancedStations = [];
-      props.allStationsData.forEach((station) => {
-         if (station.rank == "beginner")
-            beginnerStations.push(station);
-         else if (station.rank == "advanced")
-            advancedStations.push(station);
-      });
-
-      // sort by 'order'
-      beginnerStations.sort((a, b) => (a.order > b.order) ? 1 : -1)
-      advancedStations.sort((a, b) => (a.order > b.order) ? 1 : -1)
-
-      // add to state
       this.state = {
-         stations: [beginnerStations, advancedStations],
-         beginnerStations,
-         advancedStations,
+         stations: [props.allStationsData.beginnerStations, props.allStationsData.advancedStations],
+         beginnerStations: props.allStationsData.beginnerStations,
+         advancedStations: props.allStationsData.advancedStations,
          dragQueue: []
       }
    }
@@ -117,13 +103,12 @@ export default class extends React.Component {
       // droppableId 0 for beginner, 1 for advanced
       const stationList = (this.state.stations)[result.source.droppableId]
 
+      // update state to reflect order changes visually
       const newStationList = Array.from(stationList)
       newStationList.splice(from, 1)
       newStationList.splice(to, 0, stationList[from])
       for (var i = 0; i < newStationList.length; i++)
          newStationList[i].order = i
-
-      // update state to reflect order changes
       if (result.source.droppableId == 0) //beginner
          this.setState({
             beginnerStations: newStationList,
@@ -135,7 +120,7 @@ export default class extends React.Component {
             stations: [this.state.beginnerStations, newStationList]
          })
 
-      // make the change in the DB
+      // actually change the orders in the DB
       
       // if item moved up
       if (from > to) {
@@ -153,7 +138,7 @@ export default class extends React.Component {
       await updateOrder(result.draggableId, result.destination.index)
 
       // remove change from the queue
-      // 'done' button can only be pressed when DB changes are ALL finished
+      // 'done' button can only be pressed when DB changes are ALL finished (i.e. when queue is empty)
       // prevents race condition
       this.setState({ dragQueue: this.state.dragQueue.slice(1) })
    };
@@ -161,7 +146,7 @@ export default class extends React.Component {
 
 export async function getServerSideProps() {
    resetServerContext()
-   const allStationsData = await getStations()
+   const allStationsData = await getStationsSorted()
    return {
       props: {
          allStationsData,

@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { getStations } from '../lib/stations'
+import { getStationsSorted } from '../lib/stations'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
@@ -26,24 +26,13 @@ export default function Stations({ allStationsData }) {
 }
 
 function StationCards(props) {
-    const beginnerStations = [], advancedStations = [];
-    props.data.forEach((station) => {
-        if (station.rank == "beginner")
-            beginnerStations.push(station);
-        else if (station.rank == "advanced")
-            advancedStations.push(station);
-    });
-
-    beginnerStations.sort((a, b) => (a.order > b.order) ? 1 : -1);
-    advancedStations.sort((a, b) => (a.order > b.order) ? 1 : -1);
-
-    const beginnerList = beginnerStations.map((s, index) =>
+    const beginnerList = props.data.beginnerStations.map((s, index) =>
         <ListGroup.Item key={s.id} action href={"/stations/" + s.id}>
             Station { index + 1 }: {s.title}
         </ListGroup.Item>
     );
 
-    const advancedList = advancedStations.map((s, index) =>
+    const advancedList = props.data.advancedStations.map((s, index) =>
         <ListGroup.Item key={s.id} action href={"/stations/" + s.id}>
             Station { index + 1 }: {s.title}
         </ListGroup.Item>
@@ -69,7 +58,7 @@ function StationCards(props) {
 }
 
 export async function getServerSideProps() {
-    const allStationsData = await getStations()
+    const allStationsData = await getStationsSorted()
     return {
         props: {
             allStationsData

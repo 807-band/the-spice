@@ -1,7 +1,6 @@
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { postStation, getStations } from '../../lib/stations'
-import { useState } from 'react'
+import { postStation } from '../../lib/stations'
 
 export default class CreateStation extends React.Component {
    constructor(props) {
@@ -56,14 +55,5 @@ export default class CreateStation extends React.Component {
             </Form>
          </>
       )
-   }
-}
-
-export async function getServerSideProps() {
-   const allStationsData = await getStations()
-   return {
-      props: {
-         allStationsData,
-      },
    }
 }
