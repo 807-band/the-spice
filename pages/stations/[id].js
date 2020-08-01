@@ -14,7 +14,7 @@ export default function Station({ stationData }) {
          </Head>
          <h1>
             {stationData.title}
-            <Link href={"/stations/" + stationData.id + "/edit"}>
+            <Link href="/stations/[id]/edit" as={`/stations/${stationData.id}/edit`}>
                <Button variant="primary" className="edit-button">
                   Edit
                </Button>

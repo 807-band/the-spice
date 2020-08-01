@@ -53,7 +53,7 @@ export default class extends React.Component {
             <h1>
                Stations
                <Link href="/stations">
-                  <Button disabled={ this.state.dragQueue.length > 0 } variant="primary" className="edit-button">
+                  <Button disabled={this.state.dragQueue.length > 0} variant="primary" className="edit-button">
                      Done
                   </Button>
                </Link>
@@ -65,8 +65,8 @@ export default class extends React.Component {
                   <Droppable droppableId="0">
                      {provided => (
                         <ListGroup ref={provided.innerRef} {...provided.droppableProps}>
-                           { beginnerList }
-                           { provided.placeholder }
+                           {beginnerList}
+                           {provided.placeholder}
                         </ListGroup>
                      )}
                   </Droppable>
@@ -79,8 +79,8 @@ export default class extends React.Component {
                   <Droppable droppableId="1">
                      {provided => (
                         <ListGroup variant="flush" ref={provided.innerRef} {...provided.droppableProps}>
-                           { advancedList }
-                           { provided.placeholder }
+                           {advancedList}
+                           {provided.placeholder}
                         </ListGroup>
                      )}
                   </Droppable>
@@ -121,7 +121,7 @@ export default class extends React.Component {
          });
 
       // actually change the orders in the DB
-      
+
       // if item moved up
       if (from > to) {
          for (var i = to; i < from; i++) {

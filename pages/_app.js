@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }) {
          <Header />
          <Container fluid>
             <Row className="site">
-               <Col sm={4} md={3} xl={2} className="side-nav"> 
+               <Col sm={4} md={3} xl={2} className="side-nav">
                   <SideNav />
                </Col>
                <Col className="site-content">
@@ -40,4 +40,4 @@ export default function App({ Component, pageProps }) {
       </div>
    )
 }
-      
+

@@ -27,7 +27,7 @@ export default class Edit extends React.Component {
             </Head>
             <h1>
                {this.props.stationData.title}
-               <Link href={"/stations/" + this.props.stationData.id}>
+               <Link href="/stations/[id]" as={`/stations/${this.props.stationData.id}`}>
                   <Button variant="primary" className="edit-button">
                      Done
                   </Button>
@@ -93,7 +93,7 @@ export default class Edit extends React.Component {
    }
 
    switchShowDeleteStationModal = () => {
-      this.setState({showDeleteStationModal: !this.state.showDeleteStationModal});
+      this.setState({ showDeleteStationModal: !this.state.showDeleteStationModal });
    }
 
    updateShowModal = grouping => () => {
@@ -201,7 +201,7 @@ function GroupingCards(props) {
             {g.title}
             <Button variant="danger" className="edit-button" onClick={props.updateShowModal(g.id)}>
                Delete
-         </Button>
+            </Button>
          </Card.Header>
          <ListGroup>
             <GroupList grouping={g} addItemTo={props.addItemTo} updateCurrentGrouping={props.updateCurrentGrouping} onSubmit={props.onSubmit} deleteItem={props.deleteItem} />

@@ -16,7 +16,7 @@ class SideNav extends React.Component {
    }
 
    componentDidMount() {
-      this.setState({path: window.location.pathname});
+      this.setState({ path: window.location.pathname });
    }
 
    render() {
