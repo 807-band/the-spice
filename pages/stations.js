@@ -58,7 +58,7 @@ function StationCards(props) {
 }
 
 export async function getServerSideProps() {
-    const allStationsData = await getStationsSorted()
+    const allStationsData = await getStationsSorted();
     return {
         props: {
             allStationsData

@@ -4,7 +4,7 @@ import { postStation } from '../../lib/stations'
 
 export default class CreateStation extends React.Component {
    constructor(props) {
-      super(props)
+      super(props);
       this.state = {
          validated: false,
       }
@@ -19,7 +19,7 @@ export default class CreateStation extends React.Component {
          }
          else
             await postStation(form.title.value, form.description.value, form.rank.value, Number.MAX_SAFE_INTEGER);
-         this.setState({ validated: true })
+         this.setState({ validated: true });
       };
 
       return (

@@ -12,7 +12,7 @@ import Handle from '../../components/Handle'
 
 export default class extends React.Component {
    constructor(props) {
-      super(props)
+      super(props);
 
       this.state = {
          stations: [props.allStationsData.beginnerStations, props.allStationsData.advancedStations],
@@ -93,54 +93,54 @@ export default class extends React.Component {
    // called after a draggable is dropped
    onDragEnd = async (result) => {
       if (result.destination == null)
-         return
+         return;
       // add change to the queue
-      this.state.dragQueue.push(1)
-      const from = result.source.index
-      const to = result.destination.index
+      this.state.dragQueue.push(1);
+      const from = result.source.index;
+      const to = result.destination.index;
 
       // either beginnerStations or advancedStations
       // droppableId 0 for beginner, 1 for advanced
-      const stationList = (this.state.stations)[result.source.droppableId]
+      const stationList = (this.state.stations)[result.source.droppableId];
 
       // update state to reflect order changes visually
-      const newStationList = Array.from(stationList)
-      newStationList.splice(from, 1)
-      newStationList.splice(to, 0, stationList[from])
+      const newStationList = Array.from(stationList);
+      newStationList.splice(from, 1);
+      newStationList.splice(to, 0, stationList[from]);
       for (var i = 0; i < newStationList.length; i++)
-         newStationList[i].order = i
+         newStationList[i].order = i;
       if (result.source.droppableId == 0) //beginner
          this.setState({
             beginnerStations: newStationList,
             stations: [newStationList, this.state.advancedStations]
-         })
+         });
       else //advanced
          this.setState({
             advancedStations: newStationList,
             stations: [this.state.beginnerStations, newStationList]
-         })
+         });
 
       // actually change the orders in the DB
       
       // if item moved up
       if (from > to) {
          for (var i = to; i < from; i++) {
-            await updateOrder(stationList[i].id, i + 1)
+            await updateOrder(stationList[i].id, i + 1);
          }
       }
       // if item moved down
       else if (to > from) {
          for (var i = from + 1; i <= to; i++) {
-            await updateOrder(stationList[i].id, i - 1)
+            await updateOrder(stationList[i].id, i - 1);
          }
       }
       // update item that moved
-      await updateOrder(result.draggableId, result.destination.index)
+      await updateOrder(result.draggableId, result.destination.index);
 
       // remove change from the queue
       // 'done' button can only be pressed when DB changes are ALL finished (i.e. when queue is empty)
       // prevents race condition
-      this.setState({ dragQueue: this.state.dragQueue.slice(1) })
+      this.setState({ dragQueue: this.state.dragQueue.slice(1) });
    };
 }
 
