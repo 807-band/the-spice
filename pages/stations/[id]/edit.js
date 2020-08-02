@@ -1,10 +1,9 @@
 import { getStationData, postGrouping, postItem, deleteGrouping, deleteItem, deleteStation } from '../../../lib/stations'
-import Head from 'next/head'
-import Link from 'next/link'
+import StationInfoJumbo from '../../../components/StationInfoJumbo'
+import StationInfo from '../../../components/StationInfo'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
-import Container from 'react-bootstrap/Container'
-import { Col, Row, Button, Form, Modal } from 'react-bootstrap'
+import { Row, Col, Button, Form, Modal } from 'react-bootstrap'
 
 export default class Edit extends React.Component {
    constructor(props) {
@@ -15,46 +14,22 @@ export default class Edit extends React.Component {
          addItemTo: null,
          groupings: this.props.stationData.groupings,
          showModal: null,
-         showDeleteStationModal: false
+         showDeleteStationModal: false,
+         requiredClicked: false
       }
    }
 
    render() {
       return (
          <>
-            <Head>
-               <title>{this.props.stationData.title} - 807.band</title>
-            </Head>
-            <h1>
-               {this.props.stationData.title}
-               <Link href="/stations/[id]" as={`/stations/${this.props.stationData.id}`}>
-                  <Button variant="primary" className="edit-button">
-                     Done
-                  </Button>
-               </Link>
-            </h1>
-            <div className="description">{this.props.stationData.description}</div>
-            <div className="maxMissed">Maximum failed: {this.props.stationData.maxFailed}</div>
+            <StationInfoJumbo
+               stationData={this.props.stationData}
+               buttonTo="/stations/[id]"
+               as={`/stations/${this.props.stationData.id}`}
+               buttonText="Done"
+            />
 
-            <h3>Station Information</h3>
-            <Container >
-               <Row>
-                  <Col>
-                     Instructor Setup
-                  </Col>
-                  <Col>
-                     Instructor Script
-                  </Col>
-               </Row>
-               <Row>
-                  <Col>
-                     Evaluator Setup
-                  </Col>
-                  <Col>
-                     Evaluator Script
-                  </Col>
-               </Row>
-            </Container>
+            <StationInfo id={this.props.stationData.id} />
 
             <GroupingCards
                data={this.state.groupings}
@@ -65,6 +40,7 @@ export default class Edit extends React.Component {
                deleteItem={this.deleteItem}
                showModal={this.state.showModal}
                updateShowModal={this.updateShowModal}
+               clickRequiredCheckbox={this.clickRequiredCheckbox}
             />
             <br />
             <AddGrouping show={this.state.addingGrouping} switchAddingState={this.switchAddingStateGroupings} onSubmit={this.onSubmitGrouping} />
@@ -92,6 +68,10 @@ export default class Edit extends React.Component {
       await deleteStation(this.props.stationData.id);
    }
 
+   clickRequiredCheckbox = () => {
+      this.setState({ requiredClicked: !this.state.requiredClicked });
+   }
+
    switchShowDeleteStationModal = () => {
       this.setState({ showDeleteStationModal: !this.state.showDeleteStationModal });
    }
@@ -100,7 +80,8 @@ export default class Edit extends React.Component {
       this.setState({ showModal: grouping });
    }
 
-   updateCurrentGrouping = grouping => () => {
+   updateCurrentGrouping = (grouping, resetBox) => () => {
+      if (resetBox) this.setState({ requiredClicked: false });
       this.setState({ addItemTo: grouping });
    }
 
@@ -118,7 +99,7 @@ export default class Edit extends React.Component {
 
    onSubmitItem = async (event) => {
       event.preventDefault();
-      const res = await postItem(this.props.stationData.id, this.state.addItemTo.id, event.currentTarget.title.value);
+      const res = await postItem(this.props.stationData.id, this.state.addItemTo.id, event.currentTarget.title.value, this.state.requiredClicked);
       this.setState({ groupings: res.data.groupings });
    }
 
@@ -183,7 +164,7 @@ function GroupList(props) {
    return (
       <>
          {groupItems}
-         <AddItem key="add-item" addItemTo={props.addItemTo} updateCurrentGrouping={props.updateCurrentGrouping} onSubmit={props.onSubmit} grouping={props.grouping} />
+         <AddItem key="add-item" addItemTo={props.addItemTo} updateCurrentGrouping={props.updateCurrentGrouping} onSubmit={props.onSubmit} grouping={props.grouping} clickRequiredCheckbox={props.clickRequiredCheckbox} />
       </>
    );
 }
@@ -204,7 +185,7 @@ function GroupingCards(props) {
             </Button>
          </Card.Header>
          <ListGroup>
-            <GroupList grouping={g} addItemTo={props.addItemTo} updateCurrentGrouping={props.updateCurrentGrouping} onSubmit={props.onSubmit} deleteItem={props.deleteItem} />
+            <GroupList grouping={g} addItemTo={props.addItemTo} updateCurrentGrouping={props.updateCurrentGrouping} onSubmit={props.onSubmit} deleteItem={props.deleteItem} clickRequiredCheckbox={props.clickRequiredCheckbox} />
          </ListGroup>
          <Modal show={props.showModal == g.id} onHide={props.updateShowModal(null)}>
             <Modal.Header className="card-header"><Modal.Title>Are you sure you want to delete {g.title}?</Modal.Title></Modal.Header>
@@ -227,21 +208,22 @@ function GroupingCards(props) {
 function AddItem(props) {
    if (props.addItemTo == null || props.addItemTo.id != props.grouping.id)
       return (
-         <Button variant="light" onClick={props.updateCurrentGrouping(props.grouping)}>
+         <Button variant="light" onClick={props.updateCurrentGrouping(props.grouping, true)}>
             Add Item
          </Button>
       )
    return (
       <Form onSubmit={props.onSubmit}>
-         <Form.Group controlId="title">
-            <ListGroup.Item>
-               <Form.Control type="text" placeholder="Item Name" />
-            </ListGroup.Item>
-         </Form.Group>
+         <ListGroup.Item>
+            <Row>
+               <Col xs={10}><Form.Control type="text" placeholder="Item Name" id="title" /></Col>
+               <Col><Form.Check label="required" onClick={props.clickRequiredCheckbox} /></Col>
+            </Row>
+         </ListGroup.Item>
          <Button variant="primary" type="submit" className="edit-button">
             Add
          </Button>
-         <Button variant="secondary" className="edit-button" onClick={props.updateCurrentGrouping(null)}>
+         <Button variant="secondary" className="edit-button" onClick={props.updateCurrentGrouping(null, false)}>
             Back
          </Button>
       </Form>

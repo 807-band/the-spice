@@ -1,47 +1,20 @@
-import { getAllStationIds, getStationData } from '../../lib/stations'
-import Head from 'next/head'
-import Link from 'next/link'
+import { getStationData } from '../../lib/stations'
+import StationInfoJumbo from '../../components/StationInfoJumbo'
+import StationInfo from '../../components/StationInfo'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
-import Container from 'react-bootstrap/Container'
-import { Col, Row, Button } from 'react-bootstrap'
 
 export default function Station({ stationData }) {
    return (
       <>
-         <Head>
-            <title>{stationData.title} - 807.band</title>
-         </Head>
-         <h1>
-            {stationData.title}
-            <Link href="/stations/[id]/edit" as={`/stations/${stationData.id}/edit`}>
-               <Button variant="primary" className="edit-button">
-                  Edit
-               </Button>
-            </Link>
-         </h1>
-         <div className="description">{stationData.description}</div>
-         <div className="maxMissed">Maximum failed: {stationData.maxFailed}</div>
+         <StationInfoJumbo
+            stationData={stationData}
+            buttonTo="/stations/[id]/edit"
+            as={`/stations/${stationData.id}/edit`}
+            buttonText="Edit"
+         />
 
-         <h3>Station Information</h3>
-         <Container >
-            <Row>
-               <Col>
-                  Instructor Setup
-               </Col>
-               <Col>
-                  Instructor Script
-               </Col>
-            </Row>
-            <Row>
-               <Col>
-                  Evaluator Setup
-               </Col>
-               <Col>
-                  Evaluator Script
-               </Col>
-            </Row>
-         </Container>
+         <StationInfo id={stationData.id}/>
 
          <GroupingCards data={stationData.groupings} />
          <br />

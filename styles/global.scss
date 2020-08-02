@@ -35,8 +35,12 @@
    color: red;
 }
 
-.edit-button {
+.edit-button, .edit-station-button {
    float: right;
+}
+
+.edit-station-button {
+   margin: 20px;
 }
 
 .card {
@@ -46,6 +50,14 @@
 .required.list-group-item:after {
    content: " *";
    color: red;
+}
+
+.station-item {
+   text-align: left;
+}
+
+.station-title {
+   font-size: 50px;
 }
 
 // mobile view
@@ -67,4 +79,8 @@
 
 .mustang-green {
    background-color: #154734;
+}
+
+.cal-poly-gold {
+   background-color: #ffdf8a;
 }

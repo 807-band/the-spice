@@ -27,19 +27,19 @@ export default function Stations({ allStationsData }) {
 
 function StationCards(props) {
    const beginnerList = props.data.beginnerStations.map((s, index) =>
-      <ListGroup.Item key={s.id}>
-         <Link href="/stations/[id]" as={`/stations/${s.id}`}>
-            <a>{"Station " + (index + 1) + ": " + s.title}</a>
-         </Link>
-      </ListGroup.Item>
+      <Link href="/stations/[id]" as={`/stations/${s.id}`} key={s.id}>
+         <ListGroup.Item className="station-item" as="button">
+            {"Station " + (index + 1) + ": " + s.title}
+         </ListGroup.Item>
+      </Link>
    );
 
    const advancedList = props.data.advancedStations.map((s, index) =>
-      <ListGroup.Item key={s.id}>
-         <Link href="/stations/[id]" as={`/stations/${s.id}`}>
-            <a>{"Station " + (index + 1) + ": " + s.title}</a>
-         </Link>
-      </ListGroup.Item>
+      <Link href="/stations/[id]" as={`/stations/${s.id}`} key={s.id}>
+         <ListGroup.Item className="station-item" as="button">        
+            {"Station " + (index + 1) + ": " + s.title}
+         </ListGroup.Item>
+      </Link>
    );
 
    return (

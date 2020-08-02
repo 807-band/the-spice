@@ -1,8 +1,8 @@
-export default function Profile() {
+export default function Setup() {
    return (
       <>
          <h1>
-            to-be profile page
+            Instructor setup
          </h1>
       </>
    )

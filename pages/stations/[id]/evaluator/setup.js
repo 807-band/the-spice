@@ -1,8 +1,8 @@
-export default function Profile() {
+export default function Script() {
    return (
       <>
          <h1>
-            to-be profile page
+            Evaluator setup
          </h1>
       </>
    )
