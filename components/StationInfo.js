@@ -11,24 +11,24 @@ class StationInfo extends React.Component {
                <Row>
                   <Col>
                      <Link href="/stations/[id]/instructor/setup" as={`/stations/${this.props.id}/instructor/setup`}>
-                        Instructor Setup
+                        <a>Instructor Setup</a>
                      </Link>
                   </Col>
                   <Col>
                      <Link href="/stations/[id]/instructor/script" as={`/stations/${this.props.id}/instructor/script`}>
-                        Instructor Script
+                        <a>Instructor Script</a>
                      </Link>
                   </Col>
                </Row>
                <Row>
                   <Col>
                      <Link href="/stations/[id]/evaluator/setup" as={`/stations/${this.props.id}/evaluator/setup`}>
-                        Evaluator Setup
+                        <a>Evaluator Setup</a>
                      </Link>
                   </Col>
                   <Col>
                      <Link href="/stations/[id]/evaluator/script" as={`/stations/${this.props.id}/evaluator/script`}>
-                        Evaluator Script
+                        <a>Evaluator Script</a>
                      </Link>
                   </Col>
                </Row>

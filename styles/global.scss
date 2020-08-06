@@ -35,7 +35,7 @@
    color: red;
 }
 
-.edit-button, .edit-station-button {
+.edit-button {
    float: right;
 }
 
@@ -58,6 +58,16 @@
 
 .station-title {
    font-size: 50px;
+}
+
+.station-jumbo {
+   background-color: #ffdf8a;
+   display: flex;
+   flex-direction: column;
+}
+
+.edit-station-data {
+   align-self: flex-end;
 }
 
 // mobile view

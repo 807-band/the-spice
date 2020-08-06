@@ -3,18 +3,21 @@ import StationInfoJumbo from '../../components/StationInfoJumbo'
 import StationInfo from '../../components/StationInfo'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
+import Link from 'next/link'
+import { Button } from 'react-bootstrap'
 
 export default function Station({ stationData }) {
    return (
       <>
-         <StationInfoJumbo
-            stationData={stationData}
-            buttonTo="/stations/[id]/edit"
-            as={`/stations/${stationData.id}/edit`}
-            buttonText="Edit"
-         />
+         <Link href="/stations/[id]/edit" as={`/stations/${stationData.id}/edit`}>
+            <Button variant="primary" className="edit-station-button">
+               Edit
+            </Button>
+         </Link>
 
-         <StationInfo id={stationData.id}/>
+         <StationInfoJumbo stationData={stationData} edit="false" />
+
+         <StationInfo id={stationData.id} />
 
          <GroupingCards data={stationData.groupings} />
          <br />

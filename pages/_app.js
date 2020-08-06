@@ -6,6 +6,7 @@ import Col from "react-bootstrap/Col"
 
 import Header from "../components/Header";
 import SideNav from "../components/SideNav";
+import PageNav from "../components/PageNav"
 
 export default function App({ Component, pageProps }) {
    return (
@@ -33,7 +34,7 @@ export default function App({ Component, pageProps }) {
                   <Component {...pageProps} />
                </Col>
                <Col lg={2} className="page-nav">
-                  page-nav location
+                  <PageNav />
                </Col>
             </Row>
          </Container>
