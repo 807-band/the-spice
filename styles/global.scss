@@ -70,6 +70,10 @@
    align-self: flex-end;
 }
 
+.multiline-text {
+   white-space: pre-wrap;
+}
+
 // mobile view
 @include media-breakpoint-down(xs) {
    .side-nav {

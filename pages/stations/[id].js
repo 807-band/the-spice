@@ -1,6 +1,6 @@
 import { getStationData } from '../../lib/stations'
 import StationInfoJumbo from '../../components/StationInfoJumbo'
-import StationInfo from '../../components/StationInfo'
+import StationInfo from '../../components/StationInfoLinks'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
 import Link from 'next/link'

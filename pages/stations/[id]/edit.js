@@ -1,6 +1,6 @@
 import { getStationData, postGrouping, postItem, deleteGrouping, deleteItem, deleteStation, putGrouping } from '../../../lib/stations'
 import StationInfoJumbo from '../../../components/StationInfoJumbo'
-import StationInfo from '../../../components/StationInfo'
+import StationInfo from '../../../components/StationInfoLinks'
 import ListGroup from 'react-bootstrap/ListGroup'
 import { Row, Col, Button, Form, Modal, Card } from 'react-bootstrap'
 import Link from 'next/link'
