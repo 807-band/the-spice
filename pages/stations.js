@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { getStationsSorted } from '../lib/stations'
+import { getStations } from '../lib/stations'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
@@ -26,17 +26,20 @@ export default function Stations({ allStationsData }) {
 }
 
 function StationCards(props) {
-   const beginnerList = props.data.beginnerStations.map((s, index) =>
-      <Link href="/stations/[id]" as={`/stations/${s.id}`} key={s.id}>
+   const beginnerStations = props.data.filter(station => station.class == 0);
+   const advancedStations = props.data.filter(station => station.class == 1);
+
+   const beginnerList = beginnerStations.map((s, index) =>
+      <Link href="/stations/[id]" as={`/stations/${s.sID}`} key={s.sID}>
          <ListGroup.Item className="station-item" as="button">
             {"Station " + (index + 1) + ": " + s.title}
          </ListGroup.Item>
       </Link>
    );
 
-   const advancedList = props.data.advancedStations.map((s, index) =>
-      <Link href="/stations/[id]" as={`/stations/${s.id}`} key={s.id}>
-         <ListGroup.Item className="station-item" as="button">        
+   const advancedList = advancedStations.map((s, index) =>
+      <Link href="/stations/[id]" as={`/stations/${s.sID}`} key={s.sID}>
+         <ListGroup.Item className="station-item" as="button">
             {"Station " + (index + 1) + ": " + s.title}
          </ListGroup.Item>
       </Link>
@@ -62,7 +65,7 @@ function StationCards(props) {
 }
 
 export async function getServerSideProps() {
-   const allStationsData = await getStationsSorted();
+   const allStationsData = await getStations();
    return {
       props: {
          allStationsData

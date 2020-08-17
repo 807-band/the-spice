@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { getStationsSorted, updateOrder } from '../../lib/stations'
+import { getStations, updateOrder } from '../../lib/stations'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
 import { DragDropContext, resetServerContext } from 'react-beautiful-dnd'
@@ -14,20 +14,21 @@ export default class extends React.Component {
    constructor(props) {
       super(props);
 
+      const beginnerStations = props.allStationsData.filter(station => station.class == 0);
+      const advancedStations = props.allStationsData.filter(station => station.class == 1);
+
       this.state = {
-         stations: [props.allStationsData.beginnerStations, props.allStationsData.advancedStations],
-         beginnerStations: props.allStationsData.beginnerStations,
-         advancedStations: props.allStationsData.advancedStations,
-         dragQueue: []
+         beginnerStations: beginnerStations,
+         advancedStations: advancedStations
       }
    }
 
    render() {
       // map beginner and advanced lists into a lists of draggables
       const beginnerList = this.state.beginnerStations.map((s, index) =>
-         <Draggable draggableId={s.id} index={index} key={s.id}>
+         <Draggable draggableId={s.sID.toString()} index={index} key={s.sID}>
             {provided => (
-               <ListGroup.Item key={s.id} action href={"/stations/" + s.id} {...provided.draggableProps} ref={provided.innerRef}>
+               <ListGroup.Item key={s.sID} action href={"/stations/" + s.sID} {...provided.draggableProps} ref={provided.innerRef}>
                   Station { index + 1}: { s.title}
                   <Handle {...provided.dragHandleProps} />
                </ListGroup.Item>
@@ -35,9 +36,9 @@ export default class extends React.Component {
          </Draggable>
       );
       const advancedList = this.state.advancedStations.map((s, index) =>
-         <Draggable draggableId={s.id} index={index} key={s.id}>
+         <Draggable draggableId={s.sID.toString()} index={index} key={s.sID}>
             {provided => (
-               <ListGroup.Item key={s.id} action href={"/stations/" + s.id} {...provided.draggableProps} ref={provided.innerRef}>
+               <ListGroup.Item key={s.sID} action href={"/stations/" + s.sID} {...provided.draggableProps} ref={provided.innerRef}>
                   Station { index + 1}: { s.title}
                   <Handle {...provided.dragHandleProps} />
                </ListGroup.Item>
@@ -53,7 +54,7 @@ export default class extends React.Component {
             <h1>
                Stations
                <Link href="/stations">
-                  <Button disabled={this.state.dragQueue.length > 0} variant="primary" className="edit-button">
+                  <Button  variant="primary" className="edit-button">
                      Done
                   </Button>
                </Link>
@@ -94,15 +95,12 @@ export default class extends React.Component {
    onDragEnd = async (result) => {
       if (result.destination == null)
          return;
-      // add change to the queue
-      this.state.dragQueue.push(1);
       const from = result.source.index;
       const to = result.destination.index;
 
-      // either beginnerStations or advancedStations
       // droppableId 0 for beginner, 1 for advanced
-      const stationList = (this.state.stations)[result.source.droppableId];
-
+      const stationList = result.source.droppableId == 0 ? this.state.beginnerStations : this.state.advancedStations;
+      
       // update state to reflect order changes visually
       const newStationList = Array.from(stationList);
       newStationList.splice(from, 1);
@@ -111,42 +109,20 @@ export default class extends React.Component {
          newStationList[i].order = i;
       if (result.source.droppableId == 0) //beginner
          this.setState({
-            beginnerStations: newStationList,
-            stations: [newStationList, this.state.advancedStations]
+            beginnerStations: newStationList
          });
       else //advanced
          this.setState({
-            advancedStations: newStationList,
-            stations: [this.state.beginnerStations, newStationList]
+            advancedStations: newStationList
          });
 
-      // actually change the orders in the DB
-
-      // if item moved up
-      if (from > to) {
-         for (var i = to; i < from; i++) {
-            await updateOrder(stationList[i].id, i + 1);
-         }
-      }
-      // if item moved down
-      else if (to > from) {
-         for (var i = from + 1; i <= to; i++) {
-            await updateOrder(stationList[i].id, i - 1);
-         }
-      }
-      // update item that moved
       await updateOrder(result.draggableId, result.destination.index);
-
-      // remove change from the queue
-      // 'done' button can only be pressed when DB changes are ALL finished (i.e. when queue is empty)
-      // prevents race condition
-      this.setState({ dragQueue: this.state.dragQueue.slice(1) });
    };
 }
 
 export async function getServerSideProps() {
    resetServerContext()
-   const allStationsData = await getStationsSorted()
+   const allStationsData = await getStations()
    return {
       props: {
          allStationsData,
