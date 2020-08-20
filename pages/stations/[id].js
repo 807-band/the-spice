@@ -9,7 +9,7 @@ import { Button } from 'react-bootstrap'
 export default function Station({ stationData }) {
    return (
       <>
-         <Link href="/stations/[id]/edit" as={`/stations/${stationData.id}/edit`}>
+         <Link href="/stations/[id]/edit" as={`/stations/${stationData.sID}/edit`}>
             <Button variant="primary" className="edit-station-button">
                Edit
             </Button>
@@ -17,20 +17,20 @@ export default function Station({ stationData }) {
 
          <StationInfoJumbo stationData={stationData} edit="false" />
 
-         <StationInfo id={stationData.id} />
+         <StationInfo id={stationData.sID} />
 
-         <GroupingCards data={stationData.groupings} />
+         <GroupingCards data={stationData.groups} />
          <br />
       </>
    )
 }
 
 function GroupList(items) {
-   items.sort((a, b) => (a.order > b.order) ? 1 : -1);
+   items.sort((a, b) => (a.level > b.level) ? 1 : -1);
 
    return items.map((i) =>
-      <ListGroup.Item key={i.id} className={i.isRequired ? "required" : ""}>
-         {i.title}
+      <ListGroup.Item key={i.itemID} className={i.required ? "required" : ""}>
+         {i.item}
       </ListGroup.Item>
    );
 }
@@ -41,10 +41,10 @@ function GroupingCards(props) {
       groupings.push(groups);
    });
 
-   groupings.sort((a, b) => (a.order > b.order) ? 1 : -1);
+   groupings.sort((a, b) => (a.level > b.level) ? 1 : -1);
 
    const groupCards = groupings.map((g) =>
-      <Card key={g.id}>
+      <Card key={g.groupID}>
          <Card.Header className="card-header">{g.title}</Card.Header>
          <ListGroup>
             {GroupList(g.items)}

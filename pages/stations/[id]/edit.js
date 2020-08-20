@@ -12,7 +12,7 @@ export default class Edit extends React.Component {
       this.state = {
          addingGrouping: false,
          addItemTo: null,
-         groupings: this.props.stationData.groupings,
+         groupings: this.props.stationData.groups,
          showModal: null,
          showDeleteStationModal: false,
          requiredClicked: false,
@@ -23,9 +23,9 @@ export default class Edit extends React.Component {
    render() {
       return (
          <>
-            <Link href="/stations/[id]" as={`/stations/${this.props.stationData.id}`}>
+            <Link href="/stations/[id]" as={`/stations/${this.props.stationData.sID}`}>
                <Button variant="primary" type="submit" className="edit-station-button">
-                  Done
+                  Save
                </Button>
             </Link>
 
@@ -62,14 +62,14 @@ export default class Edit extends React.Component {
    }
 
    groupingTitle = (g) => {
-      if (this.state.groupingTitleChange != g.id)
+      if (this.state.groupingTitleChange != g.groupID)
          return (
             <>
                {g.title}
-               <Button variant="danger" className="edit-button" onClick={this.updateShowModal(g.id)}>
+               <Button variant="danger" className="edit-button" onClick={this.updateShowModal(g.groupID)}>
                   Delete
                </Button>
-               <Button className="edit-button" onClick={() => this.setState({ groupingTitleChange: g.id })}>
+               <Button className="edit-button" onClick={() => this.setState({ groupingTitleChange: g.groupID })}>
                   Edit Title
                </Button>
             </>
@@ -94,16 +94,16 @@ export default class Edit extends React.Component {
          groupings.push(groups);
       });
 
-      groupings.sort((a, b) => (a.order > b.order) ? 1 : -1);
-      const groupCards = groupings.map((g) =>
-         <Card key={g.id}>
+      groupings.sort((a, b) => (a.level > b.level) ? 1 : -1);
+      const groupCards = groupings.map((g) => 
+         <Card key={g.groupID}>
             <Card.Header className="card-header">
                {this.groupingTitle(g)}
             </Card.Header>
             <ListGroup>
                {this.GroupList(g)}
             </ListGroup>
-            <Modal show={this.state.showModal == g.id} onHide={this.updateShowModal(null)}>
+            <Modal show={this.state.showModal == g.groupID} onHide={this.updateShowModal(null)}>
                <Modal.Header className="card-header"><Modal.Title>Are you sure you want to delete {g.title}?</Modal.Title></Modal.Header>
                <Modal.Body>All its items will be deleted with it.</Modal.Body>
                <Modal.Footer>
@@ -122,10 +122,10 @@ export default class Edit extends React.Component {
    }
 
    GroupList = (grouping) => {
-      grouping.items.sort((a, b) => (a.order > b.order) ? 1 : -1);
+      grouping.items.sort((a, b) => (a.level > b.level) ? 1 : -1);
       const groupItems = grouping.items.map((i) =>
-         <ListGroup.Item key={i.id} className={i.isRequired ? "required" : ""}>
-            {i.title}
+         <ListGroup.Item key={i.itemID} className={i.required ? "required" : ""}>
+            {i.item}
             <Button variant="outline-danger" className="edit-button" onClick={this.deleteItem(grouping, i)}>
                Delete
             </Button>
@@ -167,7 +167,7 @@ export default class Edit extends React.Component {
    }
 
    AddItem = (grouping) => {
-      if (this.state.addItemTo == null || this.state.addItemTo.id != grouping.id)
+      if (this.state.addItemTo == null || this.state.addItemTo.groupID != grouping.groupID)
          return (
             <Button variant="light" onClick={this.updateCurrentGrouping(grouping, true)}>
                Add Item
@@ -193,12 +193,13 @@ export default class Edit extends React.Component {
 
    onSubmitGroupingTitle = grouping => async (event) => {
       event.preventDefault();
-      const res = await putGrouping(this.props.stationData.id, grouping.id, event.currentTarget.title.value);
+      const res = await putGrouping(this.props.stationData.sID, grouping.groupID, event.currentTarget.title.value);
+      // TODO adjust API to return station, or just update title manually
       this.setState({groupingTitleChange: null, groupings: res.data.groupings});
    }
 
    deleteStation = async () => {
-      await deleteStation(this.props.stationData.id);
+      await deleteStation(this.props.stationData.sID);
    }
 
    clickRequiredCheckbox = () => {
@@ -232,14 +233,14 @@ export default class Edit extends React.Component {
 
    onSubmitItem = async (event) => {
       event.preventDefault();
-      const res = await postItem(this.props.stationData.id, this.state.addItemTo.id, event.currentTarget.title.value, this.state.requiredClicked);
+      const res = await postItem(this.props.stationData.sID, this.state.addItemTo.groupID, event.currentTarget.title.value, this.state.requiredClicked);
       this.setState({ groupings: res.data.groupings });
    }
 
    deleteGrouping = grouping => async () => {
-      await deleteGrouping(this.props.stationData.id, grouping.id);
+      await deleteGrouping(this.props.stationData.sID, grouping.groupID);
       const groupings = this.state.groupings;
-      groupings.splice(grouping.order, 1);
+      groupings.splice(grouping.level, 1);
       groupings.forEach((grouping, index) => {
          grouping.order = index;
       });
@@ -247,11 +248,11 @@ export default class Edit extends React.Component {
    }
 
    deleteItem = (grouping, item) => async () => {
-      await deleteItem(this.props.stationData.id, grouping.id, item.id);
+      await deleteItem(this.props.stationData.sID, grouping.groupID, item.itemID);
       const groupings = this.state.groupings;
-      groupings[grouping.order].items.splice(item.order, 1);
-      groupings[grouping.order].items.forEach((item, index) => {
-         item.order = index;
+      groupings[grouping.level].items.splice(item.level, 1);
+      groupings[grouping.level].items.forEach((item, index) => {
+         item.level = index;
       });
       this.setState({ groupings: groupings });
    }
