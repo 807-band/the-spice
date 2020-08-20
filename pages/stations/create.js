@@ -18,7 +18,7 @@ export default class CreateStation extends React.Component {
             event.stopPropagation();
          }
          else
-            await postStation(form.title.value, form.description.value, form.rank.value, Number.MAX_SAFE_INTEGER);
+            await postStation(form.title.value, form.description.value, form.rank.value == "beginner" ? 0 : 1); 
          this.setState({ validated: true });
       };
 
