@@ -90,7 +90,7 @@ class StationInfoJumbo extends React.Component {
       newStationData.title = event.currentTarget.title.value;
       newStationData.description = event.currentTarget.description.value;
       newStationData.maxFailed = event.currentTarget.maxFailed.value;
-      await putStation(this.state.stationData.id, event.currentTarget.title.value, event.currentTarget.description.value, event.currentTarget.maxFailed.value);
+      await putStation(this.state.stationData.sID, event.currentTarget.title.value, event.currentTarget.description.value, event.currentTarget.maxFailed.value);
       this.setState({editing: false, stationData: newStationData});
    }
 }

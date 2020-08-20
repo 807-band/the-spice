@@ -25,7 +25,7 @@ export default class Edit extends React.Component {
          <>
             <Link href="/stations/[id]" as={`/stations/${this.props.stationData.sID}`}>
                <Button variant="primary" type="submit" className="edit-station-button">
-                  Save
+                  Done
                </Button>
             </Link>
 
@@ -94,7 +94,6 @@ export default class Edit extends React.Component {
          groupings.push(groups);
       });
 
-      groupings.sort((a, b) => (a.level > b.level) ? 1 : -1);
       const groupCards = groupings.map((g) => 
          <Card key={g.groupID}>
             <Card.Header className="card-header">
@@ -122,7 +121,6 @@ export default class Edit extends React.Component {
    }
 
    GroupList = (grouping) => {
-      grouping.items.sort((a, b) => (a.level > b.level) ? 1 : -1);
       const groupItems = grouping.items.map((i) =>
          <ListGroup.Item key={i.itemID} className={i.required ? "required" : ""}>
             {i.item}
@@ -193,9 +191,11 @@ export default class Edit extends React.Component {
 
    onSubmitGroupingTitle = grouping => async (event) => {
       event.preventDefault();
-      const res = await putGrouping(this.props.stationData.sID, grouping.groupID, event.currentTarget.title.value);
-      // TODO adjust API to return station, or just update title manually
-      this.setState({groupingTitleChange: null, groupings: res.data.groupings});
+      const title = event.currentTarget.title.value;
+      const res = await putGrouping(this.props.stationData.sID, grouping.groupID, title);
+      const groupings = this.state.groupings;
+      groupings[grouping.level].title = title;
+      this.setState({groupingTitleChange: null, groupings: groupings});
    }
 
    deleteStation = async () => {
@@ -225,36 +225,28 @@ export default class Edit extends React.Component {
 
    onSubmitGrouping = async (event) => {
       event.preventDefault();
-      const res = await postGrouping(this.props.stationData.id, event.currentTarget.title.value);
-      const groupings = this.state.groupings;
-      groupings.push(res.data);
-      this.setState({ groupings: groupings });
+      await postGrouping(this.props.stationData.sID, event.currentTarget.title.value);
+      const stationData = await getStationData(this.props.stationData.sID);
+      this.setState({ groupings: stationData.groups });
    }
 
    onSubmitItem = async (event) => {
       event.preventDefault();
-      const res = await postItem(this.props.stationData.sID, this.state.addItemTo.groupID, event.currentTarget.title.value, this.state.requiredClicked);
-      this.setState({ groupings: res.data.groupings });
+      await postItem(this.props.stationData.sID, this.state.addItemTo.groupID, event.currentTarget.title.value, this.state.requiredClicked);
+      const stationData = await getStationData(this.props.stationData.sID);
+      this.setState({ groupings: stationData.groups });
    }
 
    deleteGrouping = grouping => async () => {
       await deleteGrouping(this.props.stationData.sID, grouping.groupID);
-      const groupings = this.state.groupings;
-      groupings.splice(grouping.level, 1);
-      groupings.forEach((grouping, index) => {
-         grouping.order = index;
-      });
-      this.setState({ groupings: groupings, showModal: false });
+      const stationData = await getStationData(this.props.stationData.sID);
+      this.setState({ groupings: stationData.groups, showModal: false });
    }
 
    deleteItem = (grouping, item) => async () => {
       await deleteItem(this.props.stationData.sID, grouping.groupID, item.itemID);
-      const groupings = this.state.groupings;
-      groupings[grouping.level].items.splice(item.level, 1);
-      groupings[grouping.level].items.forEach((item, index) => {
-         item.level = index;
-      });
-      this.setState({ groupings: groupings });
+      const stationData = await getStationData(this.props.stationData.sID);
+      this.setState({ groupings: stationData.groups });
    }
 }
 

@@ -8,7 +8,7 @@ export default class StationInfo extends React.Component {
 
       this.state = {
          editing: false,
-         text: props.pageData.text
+         text: props.pageData.content
       }
    }
 
@@ -59,7 +59,7 @@ export default class StationInfo extends React.Component {
 
    submitForm = (event) => {
       event.preventDefault();
-      putInformation(this.props.id, this.props.pageData.id, event.currentTarget.text.value);
+      putInformation(this.props.id, this.props.pageData.packetID, event.currentTarget.text.value);
       this.setState({editing: false, text: event.currentTarget.text.value});
    }
 }
