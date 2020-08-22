@@ -4,6 +4,7 @@ import StationInfo from '../../../components/StationInfoLinks'
 import ListGroup from 'react-bootstrap/ListGroup'
 import { Row, Col, Button, Form, Modal, Card } from 'react-bootstrap'
 import Link from 'next/link'
+import Router from 'next/router'
 
 export default class Edit extends React.Component {
    constructor(props) {
@@ -52,7 +53,7 @@ export default class Edit extends React.Component {
                   <Button onClick={this.switchShowDeleteStationModal}>
                      Cancel
                   </Button>
-                  <Button variant="danger" href="/stations" onClick={this.deleteStation}>
+                  <Button variant="danger" onClick={this.deleteStation}>
                      Yes, I'm sure
                   </Button>
                </Modal.Footer>
@@ -198,8 +199,9 @@ export default class Edit extends React.Component {
       this.setState({groupingTitleChange: null, groupings: groupings});
    }
 
-   deleteStation = async () => {
+   deleteStation = async (event) => {
       await deleteStation(this.props.stationData.sID);
+      Router.push('/stations');
    }
 
    clickRequiredCheckbox = () => {
