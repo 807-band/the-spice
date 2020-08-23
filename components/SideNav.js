@@ -40,6 +40,9 @@ class SideNav extends React.Component {
             <Link href="/stations/progress">
                <a className={styles.childPage}>Station Progress</a>
             </Link>
+            <Link href="/evaluate">
+               <a className={styles.childPage}>Evaluate</a>
+            </Link>
             <Link href="/overview">
                <a className={styles.parentPage}>Overview</a>
             </Link>

@@ -31,7 +31,7 @@ function StationCards(props) {
 
    const beginnerList = beginnerStations.map((s, index) =>
       <Link href="/stations/[id]" as={`/stations/${s.sID}`} key={s.sID}>
-         <ListGroup.Item className="station-item" as="button">
+         <ListGroup.Item className="card-item" as="button">
             {"Station " + (index + 1) + ": " + s.title}
          </ListGroup.Item>
       </Link>
@@ -39,7 +39,7 @@ function StationCards(props) {
 
    const advancedList = advancedStations.map((s, index) =>
       <Link href="/stations/[id]" as={`/stations/${s.sID}`} key={s.sID}>
-         <ListGroup.Item className="station-item" as="button">
+         <ListGroup.Item className="card-item" as="button">
             {"Station " + (index + 1) + ": " + s.title}
          </ListGroup.Item>
       </Link>
