@@ -1,4 +1,5 @@
-import { getUsers, getSections } from '../lib/users'
+import { getUsers } from '../lib/users'
+import { getSections } from '../lib/sections'
 import { Card, ListGroup } from 'react-bootstrap'
 import Link from 'next/link'
 

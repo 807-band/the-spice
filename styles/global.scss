@@ -56,6 +56,20 @@
    text-align: left;
 }
 
+.card-item-passed {
+   text-align: left;
+   background-color: lightgreen;
+}
+
+.card-item-failed {
+   text-align: left;
+   background-color: lightcoral;
+}
+
+.status {
+   color: grey;
+}
+
 .station-title {
    font-size: 50px;
 }
