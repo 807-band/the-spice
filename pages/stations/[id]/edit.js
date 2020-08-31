@@ -1,4 +1,6 @@
-import { getStationData, postGrouping, postItem, deleteGrouping, deleteItem, deleteStation, putGrouping } from '../../../lib/stations'
+import { getStationData, postGrouping, postItem, 
+   deleteGrouping, deleteItem, deleteStation, 
+   putGrouping, putItem } from '../../../lib/stations'
 import StationInfoJumbo from '../../../components/StationInfoJumbo'
 import StationInfo from '../../../components/StationInfoLinks'
 import ListGroup from 'react-bootstrap/ListGroup'
@@ -17,7 +19,9 @@ export default class Edit extends React.Component {
          showModal: null,
          showDeleteStationModal: false,
          requiredClicked: false,
-         groupingTitleChange: null
+         editRequiredClicked: false,
+         groupingTitleChange: null,
+         itemChange: null
       }
    }
 
@@ -80,10 +84,10 @@ export default class Edit extends React.Component {
             <Form onSubmit={this.onSubmitGroupingTitle(g)}>
                <Form.Control type="text" defaultValue={g.title} id="title" />
                <Button variant="primary" type="submit" className="edit-button">
-                     Save
+                  Save
                </Button>
-               <Button variant="secondary" className="edit-button" onClick={() => this.setState({groupingTitleChange: null})}>
-                     Back
+               <Button variant="secondary" className="edit-button" onClick={() => this.setState({ groupingTitleChange: null })}>
+                  Back
                </Button>
             </Form>
          );
@@ -95,7 +99,7 @@ export default class Edit extends React.Component {
          groupings.push(groups);
       });
 
-      const groupCards = groupings.map((g) => 
+      const groupCards = groupings.map((g) =>
          <Card key={g.groupID}>
             <Card.Header className="card-header">
                {this.groupingTitle(g)}
@@ -123,12 +127,7 @@ export default class Edit extends React.Component {
 
    GroupList = (grouping) => {
       const groupItems = grouping.items.map((i) =>
-         <ListGroup.Item key={i.itemID} className={i.required ? "required" : ""}>
-            {i.item}
-            <Button variant="outline-danger" className="edit-button" onClick={this.deleteItem(grouping, i)}>
-               Delete
-            </Button>
-         </ListGroup.Item>
+         <div key={i.itemID}>{this.Item(grouping, i)}</div>
       );
 
       return (
@@ -137,6 +136,38 @@ export default class Edit extends React.Component {
             {this.AddItem(grouping)}
          </>
       );
+   }
+
+   Item = (grouping, i) => {
+      if (this.state.itemChange != i.itemID)
+         return (
+            <ListGroup.Item key={i.itemID} className={i.required ? "required" : ""}>
+               {i.item}
+               <Button variant="outline-danger" className="edit-button" onClick={this.deleteItem(grouping, i)}>
+                  Delete
+               </Button>
+               <Button variant="outline-primary" className="edit-button" onClick={() => this.setState({ itemChange: i.itemID })}>
+                  Edit Item
+               </Button>
+            </ListGroup.Item>
+         );
+      else
+         return (
+            <Form onSubmit={this.onUpdateItem(grouping, i)}>
+               <ListGroup.Item>
+                  <Row>
+                     <Col xs={10}><Form.Control type="text" defaultValue={i.item} id="title" /></Col>
+                     <Col><Form.Check label="required" onClick={() => this.setState({ editRequiredClicked: !this.state.editRequiredClicked })} /></Col>
+                  </Row>
+               </ListGroup.Item>
+               <Button variant="primary" type="submit" className="edit-button">
+                  Save
+               </Button>
+               <Button variant="secondary" className="edit-button" onClick={() => this.setState({ itemChange: null, editRequiredClicked: false })}>
+                  Back
+               </Button>
+            </Form>
+         );
    }
 
    AddGrouping = () => {
@@ -196,7 +227,7 @@ export default class Edit extends React.Component {
       const res = await putGrouping(this.props.stationData.sID, grouping.groupID, title);
       const groupings = this.state.groupings;
       groupings[grouping.level].title = title;
-      this.setState({groupingTitleChange: null, groupings: groupings});
+      this.setState({ groupingTitleChange: null, groupings: groupings });
    }
 
    deleteStation = async (event) => {
@@ -237,6 +268,15 @@ export default class Edit extends React.Component {
       await postItem(this.props.stationData.sID, this.state.addItemTo.groupID, event.currentTarget.title.value, this.state.requiredClicked);
       const stationData = await getStationData(this.props.stationData.sID);
       this.setState({ groupings: stationData.groups });
+   }
+
+   onUpdateItem = (grouping, item) => async (event) => {
+      event.preventDefault();
+      const groupings = this.state.groupings;
+      groupings[grouping.level].items[item.level].item = event.currentTarget.title.value;
+      groupings[grouping.level].items[item.level].required = this.state.editRequiredClicked ? 1 : 0;
+      await putItem(this.props.stationData.sID, grouping.groupID, item.itemID, event.currentTarget.title.value, this.state.editRequiredClicked ? 1 : 0);
+      this.setState({ itemChange: null, editRequiredClicked: false, groupings: groupings });
    }
 
    deleteGrouping = grouping => async () => {
