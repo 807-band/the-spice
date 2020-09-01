@@ -40,7 +40,7 @@ class EvaluateUserStation extends React.Component {
                      {group.items.map((item) => (
                         <ListGroup.Item key={item.itemID}>
                            <Form.Group controlId={item.itemID}>
-                              <Form.Switch onChange={this.changeSwitch(item.itemID)} id={item.itemID} label={item.item} />
+                              <Form.Switch className={item.required ? "required" : ""} onChange={this.changeSwitch(item.itemID)} id={item.itemID} label={item.item} />
                            </Form.Group>
                         </ListGroup.Item>
                      ))}
