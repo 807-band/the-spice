@@ -52,6 +52,13 @@
    color: red;
 }
 
+// did this to get star on /evaluate/[uID]/[sID]
+// probably a better way, my css sucks
+.required:after {
+   content: " *";
+   color: red;
+}
+
 .card-item {
    text-align: left;
 }
