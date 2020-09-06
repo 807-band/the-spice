@@ -19,6 +19,14 @@ class SideNav extends React.Component {
       this.setState({ path: window.location.pathname });
    }
 
+   LinkText = (className, show, text) => {
+      if(!show)
+         return <></>
+      return (
+         <a className={className}>{text}</a>
+      )
+   }
+
    render() {
       return (
          <>
@@ -32,7 +40,7 @@ class SideNav extends React.Component {
                <a className={styles.parentPage}>Stations</a>
             </Link>
             <Link href="/stations/create">
-               <a className={styles.childPage}>Create Station</a>
+               {this.LinkText(styles.childPage, this.props.permissions.includes('admin'), 'Create Station')}
             </Link>
             <Link href="/stations">
                <a className={styles.childPage}>View Stations</a>
@@ -41,10 +49,11 @@ class SideNav extends React.Component {
                <a className={styles.childPage}>Station Progress</a>
             </Link>
             <Link href="/evaluate">
-               <a className={styles.parentPage}>Evaluate</a>
+               {this.LinkText(styles.parentPage, this.props.permissions.includes('eval') || 
+                  this.props.permissions.includes('admin'), 'Evaluate')}
             </Link>
             <Link href="/overview">
-               <a className={styles.parentPage}>Overview</a>
+               {this.LinkText(styles.parentPage, this.props.permissions.includes('admin'), 'Overview')}
             </Link>
             <Link href="/profile">
                <a className={styles.parentPage}>Profile</a>

@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import { parseCookies } from 'nookies'
-import { getUser } from '../lib/users'
+import { getUser, getPermissions } from '../lib/users'
 import Login from '../pages/login'
 import App from 'next/app'
 import { withRouter } from 'next/router'
@@ -63,11 +63,11 @@ class MyApp extends React.Component {
                   crossOrigin="anonymous"
                />
             </Head>
-            <Header />
+            <Header permissions={this.props.pageProps.permissions}/>
             <Container fluid>
                <Row className="site">
                   <Col sm={4} md={3} xl={2} className="side-nav">
-                     <SideNav />
+                     <SideNav permissions={this.props.pageProps.permissions}/>
                   </Col>
                   <Col className="site-content">
                      <this.props.Component {...this.props.pageProps} />
@@ -88,7 +88,9 @@ MyApp.getInitialProps = async (appContext) => {
 
    const cookies = parseCookies(appContext.ctx);
    const currentUser = await getUser(cookies.currUserID);
-   appProps.pageProps.currentUser = currentUser
+   const permissions = await getPermissions(cookies.currUserID);
+   appProps.pageProps.currentUser = currentUser;
+   appProps.pageProps.permissions = permissions;
 
    return { ...appProps }
 }

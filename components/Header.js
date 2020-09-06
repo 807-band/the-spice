@@ -4,6 +4,14 @@ import Navbar from "react-bootstrap/Navbar";
 import "../styles/modules/Header.module.css"
 
 class Header extends React.Component {
+   LinkText = (show, text) => {
+      if(!show)
+         return <></>
+      return (
+         <a className="nav-link">{text}</a>
+      )
+   }
+
    render() {
       return (
          <Navbar className="header mustang-green" variant="dark" expand="sm" fixed="top">
@@ -21,10 +29,11 @@ class Header extends React.Component {
                      <a className="nav-link">Stations</a>
                   </Link>
                   <Link href="/evaluate">
-                     <a className="nav-link">Evaluate</a>
+                     {this.LinkText(this.props.permissions.includes('eval') || 
+                     this.props.permissions.includes('admin'), 'Evaluate')}
                   </Link>
                   <Link href="/overview">
-                     <a className="nav-link">Overview</a>
+                     {this.LinkText(this.props.permissions.includes('admin'), 'Overview')}
                   </Link>
                </Nav>
                <Nav className="ml-auto">
