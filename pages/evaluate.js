@@ -32,7 +32,7 @@ function SectionCards(props) {
          <Card.Header className="card-header">{section.name}</Card.Header>
          <ListGroup>
             {groupedUsers[section.sectionID].map((user, index) => 
-               <Link href="/evaluate/[id]" as={`/evaluate/${user.userID}`} key={user.userID}>
+               <Link href="/evaluate/[uID]" as={`/evaluate/${user.userID}`} key={user.userID}>
                   <ListGroup.Item className="card-item" as="button">
                      {user.name}
                   </ListGroup.Item>
