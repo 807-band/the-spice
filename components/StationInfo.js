@@ -80,12 +80,12 @@ export default class StationInfo extends React.Component {
 
   createEditCard = (c) => {
     return (
-      <Form onSubmit={this.saveInfo} info-key={c.packetID}>
+      <Form onSubmit={this.saveInfo} info-key={c.packetID} key={c.packetID}>
         <Card>
           <Card.Header className="card-header"></Card.Header>
           <Card.Body>
             <Card.Text className="multiline-text">
-              <Form.Control id="text" defaultValue={c.content} as="textarea" rows="20" maxlength="4000" />
+              <Form.Control id="text" defaultValue={c.content} as="textarea" rows="20" maxLength="4000" />
             </Card.Text>
           </Card.Body>
         </Card>
