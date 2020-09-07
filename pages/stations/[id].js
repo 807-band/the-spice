@@ -6,7 +6,16 @@ import Card from 'react-bootstrap/Card'
 import Link from 'next/link'
 import { Button } from 'react-bootstrap'
 
-export default function Station({ stationData }) {
+export default function Station({ stationData, permissions }) {
+   if (!permissions.includes('admin'))
+      return (
+         <>
+            <StationInfoJumbo stationData={stationData} edit="false" />
+            <StationInfo id={stationData.sID} />
+            <GroupingCards data={stationData.groups} />
+            <br />
+         </>
+      )
    return (
       <>
          <Link href="/stations/[id]/edit" as={`/stations/${stationData.sID}/edit`}>

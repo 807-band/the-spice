@@ -5,7 +5,20 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 
-export default function Stations({ allStationsData }) {
+export default function Stations({ allStationsData, permissions }) {
+   if (!permissions.includes('admin'))
+      return (
+         <>
+            <Head>
+               <title>807.band</title>
+            </Head>
+            <h1>
+               Stations
+            </h1>
+
+            <StationCards data={allStationsData} />
+         </>
+      );
    return (
       <>
          <Head>

@@ -65,7 +65,7 @@ class EvaluateUserStation extends React.Component {
       event.preventDefault();
       // TODO: once we have user auth, the second userID will be the evaluatorID
       // for now, the user evaluates themselves ;)
-      await submitEvaluation(this.props.user.userID, this.props.station.sID, this.props.user.userID, this.state.switchMap, this.props.station.maxFailed);
+      await submitEvaluation(this.props.user.userID, this.props.station.sID, this.props.currentUser.userID, this.state.switchMap, this.props.station.maxFailed);
       this.props.router.push("/evaluate/[uID]", `/evaluate/${this.props.user.userID}`);
    }
 }
