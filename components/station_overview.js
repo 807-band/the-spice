@@ -32,7 +32,7 @@ function StationBoxes(props) {
   const stationTag = stations.map(station => {
     return (
       <Col title={station.title} className={styles.stationColor}>
-        {station.level}
+        {station.level + 1}
       </Col>
     )
   });
@@ -76,7 +76,6 @@ function Members(props) {
 
   for (let name in props.members) {
     let member = props.members[name];
-    console.log(member);
     members.push(
       <Row key={member.userID}>
         <Col xs={3} className={styles.nameColor}>{name}</Col>
