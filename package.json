@@ -8,7 +8,7 @@
     "start": "next start -p 80"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.0",
     "config": "^3.3.1",
     "cors": "^2.8.5",
